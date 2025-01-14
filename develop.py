@@ -14,21 +14,25 @@ async def send_weight_data(api_key):
     """Connect to WebSocket server and send weight data"""
     uri = "ws://localhost:8080/api/ws/weight"
 
+    # Set up headers with API key
+    extra_headers = {"X-API-Key": api_key}
+
     while True:
         try:
-            async with websockets.connect(uri) as websocket:
+            async with websockets.connect(
+                uri, extra_headers=extra_headers
+            ) as websocket:
                 print(f"Connected to WebSocket server at {uri}")
 
                 while True:
                     # Generate mock weight data
                     weight = await generate_mock_weight()
 
-                    # Create data payload with api_key
+                    # Create data payload (no API key needed here anymore)
                     data = {
                         "weight": weight,
                         "unit": "kg",
                         "timestamp": datetime.now().isoformat(),
-                        "apiKey": api_key,
                     }
 
                     # Convert to JSON and send
@@ -37,15 +41,15 @@ async def send_weight_data(api_key):
                     print(f"Sent: {message}")
 
                     # Wait before sending next reading
-                    await asyncio.sleep(1.5)  # Matches server's broadcast interval
+                    await asyncio.sleep(1.5)
 
         except websockets.exceptions.ConnectionClosed:
             print("Connection lost. Attempting to reconnect...")
-            await asyncio.sleep(5)  # Wait 5 seconds before reconnecting
+            await asyncio.sleep(5)
 
         except Exception as e:
             print(f"Error: {str(e)}")
-            await asyncio.sleep(5)  # Wait 5 seconds before retrying
+            await asyncio.sleep(5)
 
 
 async def main():
