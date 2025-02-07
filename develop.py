@@ -15,7 +15,8 @@ async def send_weight_data(api_key):
     uri = "ws://localhost:8080/api/ws/weight"
 
     # Set up headers with API key
-    extra_headers = {"X-API-Key": api_key}
+    # extra_headers = {"X-API-Key": api_key}
+    extra_headers = {"X-API-Key": "TUOGArQ1DLLEY0Fw1USlm8Ec3aGD4SapZdQVO63kXPk="}
 
     while True:
         try:
