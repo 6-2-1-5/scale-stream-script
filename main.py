@@ -4,6 +4,7 @@ import json
 import asyncio
 import websockets
 from datetime import datetime
+from printer.print import print_receipt
 
 # Store connected clients
 connected_clients = set()

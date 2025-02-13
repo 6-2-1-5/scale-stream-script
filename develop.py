@@ -3,7 +3,7 @@ import json
 import websockets
 from datetime import datetime
 import random
-
+from printer.print import print_receipt
 
 async def generate_mock_weight():
     """Generate mock weight data between 100-9999"""
