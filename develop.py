@@ -32,11 +32,12 @@ async def handle_server_message(message):
 
 async def send_weight_data(api_key):
     """Connect to WebSocket server and send weight data"""
-    uri = "ws://localhost:8080/api/ws/weight"
+    # uri = "ws://localhost:8080/api/ws/weight"
+    uri = "wss://api.mangify.xyz/api/ws/weight"
 
     # Set up headers with API key
     # extra_headers = {"X-API-Key": api_key}
-    extra_headers = {"X-API-Key": "yYusNkKvoFr67F3h-jOe7Mz0Jljsct6b7JoU3lGvYl4"}
+    extra_headers = {"X-API-Key": "yxB-RehKYilKtuxlkIFUc-znp-0M9cBuAVNXGJTZlbM"}
 
     while True:
         try:
