@@ -1,0 +1,5 @@
+pypiwin32
+Pillow
+numpy
+pyserial
+websockets
