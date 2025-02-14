@@ -15,14 +15,20 @@ async def handle_server_message(message):
     try:
         print("Received from server:", message)
         data = json.loads(message)
-        print("Received from server:", data)
 
         # Handle specific message types
-        if data.get("method") == "print-bill":
+        if data.get("command") == "print-bill":
             print(
                 f"Processing print bill request for organization: {data.get('organizationId')}"
             )
             # Add your bill printing logic here
+            test_items = [
+                {"name": "ข้าวผัด", "qty": 2, "price": 50.00},
+                {"name": "ต้มยำ", "qty": 1, "price": 80.00},
+                {"name": "น้ำเปล่า", "qty": 3, "price": 10.00},
+            ]
+            
+            print_receipt(test_items)
 
     except json.JSONDecodeError:
         print("Error: Received invalid JSON message from server")
