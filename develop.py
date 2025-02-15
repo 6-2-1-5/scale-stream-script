@@ -18,17 +18,7 @@ async def handle_server_message(message):
 
         # Handle specific message types
         if data.get("command") == "print-bill":
-            print(
-                f"Processing print bill request for organization: {data.get('organizationId')}"
-            )
-            # Add your bill printing logic here
-            test_items = [
-                {"name": "ข้าวผัด", "qty": 2, "price": 50.00},
-                {"name": "ต้มยำ", "qty": 1, "price": 80.00},
-                {"name": "น้ำเปล่า", "qty": 3, "price": 10.00},
-            ]
-            
-            print_receipt(test_items)
+            print_receipt(data)
 
     except json.JSONDecodeError:
         print("Error: Received invalid JSON message from server")
@@ -38,8 +28,8 @@ async def handle_server_message(message):
 
 async def send_weight_data(api_key):
     """Connect to WebSocket server and send weight data"""
-    uri = "ws://localhost:8080/api/ws/weight"
-    # uri = "wss://api.mangify.xyz/api/ws/weight"
+    # uri = "ws://localhost:8080/api/ws/weight"
+    uri = "wss://api.mangify.xyz/api/ws/weight"
 
     # Set up headers with API key
     # extra_headers = {"X-API-Key": api_key}
