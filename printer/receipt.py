@@ -1,4 +1,4 @@
-from print import (
+from printer.print_utils import (
     find_xprinter,
     create_text_image,
     print_image,
@@ -167,19 +167,14 @@ def print_bill_payment_summary_receipt(bill_data):
         lines = [
             HEADER,
             "=" * RECEIPT_WIDTH,
-            "บันทึกการชำระเงิน",
-            "-" * RECEIPT_WIDTH,
-            f"กรุณาระบุจำนวนเงินที่ได้รับ ยอดคงเหลือ: ฿{total_amount:,}",
-            "",
             "สรุปการชำระเงิน",
             "-" * RECEIPT_WIDTH,
-            f"จำนวนบิลที่ยังไม่ได้จ่าย: {bill_count}",
-            f"น้ำหนักรวม: {total_weight:,} kg",
+            f"จำนวนบิลที่จ่าย: {bill_count}",
+            f"น้ำหนักรวม: {total_weight:,} กก.",
             f"ยอดรวมทั้งหมด: ฿{total_amount:,}",
             "",
             "รายละเอียดบิล",
             "-" * RECEIPT_WIDTH,
-            "รหัสบิล          สร้างเมื่อ         น้ำหนัก(กก.)  จำนวนเงิน",
         ]
 
         # เพิ่มรายละเอียดแต่ละบิล
@@ -188,40 +183,24 @@ def print_bill_payment_summary_receipt(bill_data):
             thai_date = get_thai_time(bill["weighingMeasurement"]["createdAt"])
 
             # ตัดรหัสบิลให้สั้นลงถ้ายาวเกินไป
-            short_id = bill["id"][:8]
+            # short_id = bill["id"][:8]
 
-            # จัดรูปแบบข้อมูลให้ตรงคอลัมน์
-            line = f"{short_id:<15} {thai_date:<15} {bill['weighingMeasurement']['netWeight']:>7,} {bill['paymentAmount']:>10,}"
-            lines.append(line)
-
-        lines.extend(
-            [
-                "=" * RECEIPT_WIDTH,
-                "",
-                "แสกน QR code เพื่อดูรายละเอียดเพิ่มเติม",
-                "",  # เว้นบรรทัดสำหรับ QR code
-            ]
-        )
+            # แยกข้อมูลเป็น 2 บรรทัด
+            line1 = f"รหัส: {bill['id']}"
+            line2 = f"วันที่: {thai_date}"
+            line3 = f"น้ำหนัก: {bill['weighingMeasurement']['netWeight']:,} กก."
+            line4 = f"จำนวนเงิน: ฿{bill['paymentAmount']:,}"
+            
+            lines.extend([line1, line2, line3, line4, "-" * RECEIPT_WIDTH])
 
         # รวมทุกบรรทัดด้วยการขึ้นบรรทัดใหม่
         text = "\n".join(lines)
 
-        # สร้าง QR code
-        qr_image = generate_qr_code(
-            bill_data["data"]["organizationId"],
-            bill_data["data"]["billIds"][0]
-            if bill_data["data"]["paidType"] == "partial"
-            else "summary",
-        )
-
         # สร้างภาพใบเสร็จ
         receipt_image = create_text_image(text, align="left")
 
-        # รวมภาพใบเสร็จและ QR code
-        final_image = merge_images(receipt_image, qr_image)
-
         # พิมพ์ภาพ
-        success = print_image(final_image, printer_name)
+        success = print_image(receipt_image, printer_name)
 
         if not success:
             raise Exception("การพิมพ์ล้มเหลว")
