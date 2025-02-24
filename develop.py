@@ -3,7 +3,8 @@ import json
 import websockets
 from datetime import datetime
 import random
-from printer.print import print_receipt
+from printer.receipt import print_receipt, print_bill_payment_summary_receipt
+
 
 async def generate_mock_weight():
     """Generate mock weight data between 100-9999"""
@@ -17,9 +18,19 @@ async def handle_server_message(message):
         data = json.loads(message)
 
         # Handle specific message types
-        if data.get("command") == "print-bill":
-            print_receipt(data)
+        # if data.get("command") == "print-bill":
+        #     print_receipt(data)
 
+        # switch case
+        switcher = {
+            "print-bill": print_receipt,
+            "print-bill-payment-summary-receipt": print_bill_payment_summary_receipt,
+        }
+
+        # Get the function from switcher dictionary
+        func = switcher.get(data.get("command"), lambda: "Invalid command")
+        # Execute the function
+        func(data)
     except json.JSONDecodeError:
         print("Error: Received invalid JSON message from server")
     except Exception as e:
