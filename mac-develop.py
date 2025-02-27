@@ -45,7 +45,7 @@ def print_receipt(data):
 
 async def generate_mock_weight():
     """Generate mock weight data between 100-9999"""
-    return round(random.uniform(100, 9999), 2)
+    return round(random.uniform(100, 9999))
 
 
 async def handle_server_message(message):
